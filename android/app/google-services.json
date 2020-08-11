@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "26378173197",
+    "firebase_url": "https://butterfishbread.firebaseio.com",
+    "project_id": "butterfishbread",
+    "storage_bucket": "butterfishbread.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:26378173197:android:c8a1b4b18242a28a254e44",
+        "android_client_info": {
+          "package_name": "com.butterfish.bread"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "26378173197-24963254lefu5ea3h7s2g01umd1h4qn1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.butterfish.bread",
+            "certificate_hash": "cf0854ac5b6333ad9e986f3022d38e431522bafb"
+          }
+        },
+        {
+          "client_id": "26378173197-2kafv324fdsttsk0jci2shvgh9brfkf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoe9Z14IVDNYrA1Z5Jv7GCXnR7QOyg3kE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "26378173197-2kafv324fdsttsk0jci2shvgh9brfkf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
