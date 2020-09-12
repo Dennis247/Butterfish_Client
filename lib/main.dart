@@ -4,6 +4,7 @@ import 'package:provider_pattern/pages/auth/auth_screen.dart';
 import 'package:provider_pattern/pages/auth/reset_password_screen.dart';
 import 'package:provider_pattern/pages/cart/cartPage.dart';
 import 'package:provider_pattern/pages/home/homePage.dart';
+import 'package:provider_pattern/pages/offers/offers_screen.dart';
 import 'package:provider_pattern/pages/user/profilePage.dart';
 import 'package:provider_pattern/pages/orders/orderPage.dart';
 import 'package:provider_pattern/pages/product/product_details_screen.dart';
@@ -11,6 +12,7 @@ import 'package:provider_pattern/pages/user/referalCode.dart';
 import 'package:provider_pattern/pages/widgets/splashWIdget.dart';
 import 'package:provider_pattern/provider/authProvider.dart';
 import 'package:provider_pattern/provider/categoryProvider.dart';
+import 'package:provider_pattern/provider/offersProvider.dart';
 import 'package:provider_pattern/provider/orderProvider.dart';
 import 'package:provider_pattern/provider/paymentProvider.dart';
 import 'package:provider_pattern/provider/productProvider.dart';
@@ -37,7 +39,10 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider.value(value: OrderProvider()),
           ChangeNotifierProvider.value(value: CouponProvider()),
           ChangeNotifierProvider.value(value: PaymentProvider()),
-          ChangeNotifierProvider.value(value: NotificationProvider()),
+          ChangeNotifierProvider.value(
+            value: NotificationProvider(),
+          ),
+          ChangeNotifierProvider.value(value: OfferProvider())
         ],
         child: Consumer<AuthProvider>(
           builder: (context, authData, _) {
@@ -63,7 +68,8 @@ class MyApp extends StatelessWidget {
                   ProfilePage.routeName: (context) => ProfilePage(),
                   ResetPasswordScreen.routeName: (context) =>
                       ResetPasswordScreen(),
-                  ReferalCode.routeName: (context) => ReferalCode()
+                  ReferalCode.routeName: (context) => ReferalCode(),
+                  OffersScreen.routename: (context) => OffersScreen()
                 });
           },
         ));

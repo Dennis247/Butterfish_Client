@@ -5,8 +5,9 @@ class Constants {
   static String appName = "Bread & Butter Fish";
   static String appWebsite = "http://teas-tarts-tings.com";
   static String resturantName = "ButterFish & Bread";
-  static String publicKey = "FLWPUBK-2c812e3e3e969401ee697274882d176c-X";
-  static String encryptionKey = "36a47583762c7e7156f37e81";
+  static String publicKey = "FLWPUBK-03e61b2ad958b0c3391be19044654bda-X";
+  static String encryptionKey = "667fd7b1273b2d4b0e1f853d";
+  static String secretKey = "FLWSECK-667fd7b1273b7132f8213bf4d12f7f60-X";
 
   static String kenyaCode = "+254";
   static double kenyaLatitude = -1.288709;
@@ -49,6 +50,9 @@ class Constants {
 
   //logo
   static String logoUrl = "assets/images/logo.jpeg";
+
+  //
+  static String initaitePaymentUrl = "https://api.flutterwave.com/v3/payments";
 
   //Colors for theme
   static Color primaryColor = Color(0xff5563ff);

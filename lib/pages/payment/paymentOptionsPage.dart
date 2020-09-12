@@ -8,6 +8,7 @@ import 'package:provider_pattern/models/userProfile.dart';
 import 'package:provider_pattern/pages/auth/auth_screen.dart';
 import 'package:provider_pattern/pages/orders/orderPage.dart';
 import 'package:provider_pattern/pages/payment/couponPayment.dart';
+import 'package:provider_pattern/pages/payment/paymentGateWay.dart';
 import 'package:provider_pattern/provider/authProvider.dart';
 import 'package:provider_pattern/provider/cartProvider.dart';
 import 'package:provider_pattern/provider/orderProvider.dart';
@@ -15,6 +16,7 @@ import 'package:provider_pattern/provider/paymentProvider.dart';
 import 'package:rave_flutter/rave_flutter.dart';
 import 'package:toast/toast.dart';
 import 'package:provider_pattern/provider/NotificationProvider.dart';
+import 'package:tuple/tuple.dart';
 import 'package:uuid/uuid.dart';
 
 class PaymentOptions extends StatefulWidget {
@@ -44,6 +46,9 @@ class _PaymentOptionsState extends State<PaymentOptions> {
   final _anonymousFullNmae = TextEditingController();
   final _anonymousPhoneNumber = TextEditingController();
   bool anonymousResult = false;
+  String _paymentLink;
+  Tuple2<ResponseModel, String> response;
+  bool _isLoadingGateWay = false;
 
   Future<void> _showAnonymousDialogue() {
     return showDialog(
@@ -301,8 +306,7 @@ class _PaymentOptionsState extends State<PaymentOptions> {
     Navigator.of(context).pushReplacementNamed(OrdersScreen.routeName);
   }
 
-  _porcessOnlinePaymentRespone(
-      OrderItem orderedItem, PaymentResponseModel response) async {
+  _porcessOnlinePaymentRespone(OrderItem orderedItem) async {
     orderedItem = new OrderItem(
         id: Uuid().v4(),
         name: loggedInUser.lastName != ""
@@ -323,20 +327,24 @@ class _PaymentOptionsState extends State<PaymentOptions> {
         status: Constants.pendingStatus,
         userId: loggedInUser.userId);
     response = await Provider.of<PaymentProvider>(context, listen: false)
-        .startPayment(
+        .initiatePayment(
             amount: widget.amount,
             context: context,
             narration: widget.description,
             orderRef: orderedItem.oderNo,
             txRef: orderedItem.referenceNo);
+    if (response.item1.isSUcessfull) {
+      _paymentLink = response.item2;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     //generate order instace here
-    PaymentResponseModel response = new PaymentResponseModel(
-        responseModel: new ResponseModel(false, "Payment Cancelled"),
-        raveStatus: RaveStatus.cancelled);
+    // PaymentResponseModel response = new PaymentResponseModel(
+    //     responseModel: new ResponseModel(false, "Payment Cancelled"),
+    //     raveStatus: RaveStatus.cancelled);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("MAKE PAYMENT"),
@@ -353,76 +361,87 @@ class _PaymentOptionsState extends State<PaymentOptions> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                _buildPaymentWidget(
-                    title: "ONLINE PAYMENT",
-                    color: Colors.orangeAccent,
-                    function: () async {
-                      OrderItem orderedItem;
-                      if (loggedInUser.lastName == "") {
-                        await _showAnonymousDialogue();
-                        if (anonymousResult) {
-                          await _porcessOnlinePaymentRespone(
-                              orderedItem, response);
-                          if (response.responseModel.isSUcessfull) {
-                            Constants.showSuccessDialogue(
-                                response.responseModel.responseMessage,
-                                context);
-                            if (response.raveStatus == RaveStatus.success) {
-                              //add item to order list and send mail
-                              _processCompletePaymentProcess(orderedItem);
+                _isLoadingGateWay
+                    ? CircularProgressIndicator()
+                    : _buildPaymentWidget(
+                        title: "ONLINE PAYMENT",
+                        color: Colors.orangeAccent,
+                        function: () async {
+                          setState(() {
+                            _isLoadingGateWay = true;
+                          });
+                          OrderItem orderedItem;
+                          orderedItem = new OrderItem(
+                              id: Uuid().v4(),
+                              name: loggedInUser.lastName != ""
+                                  ? loggedInUser.firstName +
+                                      " " +
+                                      loggedInUser.lastName
+                                  : loggedInUser.firstName,
+                              phoneNumber: loggedInUser.phoneNumber,
+                              email: loggedInUser.email != null
+                                  ? loggedInUser.email
+                                  : "",
+                              referenceNo:
+                                  "Butterfish & Bread-new Order-${DateTime.now().toString()}",
+                              oderNo: Uuid().v1().substring(0, 5),
+                              narration: widget.description,
+                              totalAmount: widget.amount.toString() + " Ksh",
+                              paymentMethod: "Online",
+                              amount: widget.amount.toString() + " Ksh",
+                              dateTime: DateTime.now(),
+                              deliveryAddress: widget.deliveryAddress,
+                              products: widget.cartItems,
+                              status: Constants.pendingStatus,
+                              userId: loggedInUser.userId);
+
+                          if (loggedInUser.lastName == "") {
+                            await _showAnonymousDialogue();
+                            if (anonymousResult) {
+                              await _porcessOnlinePaymentRespone(orderedItem);
+                              if (response.item1.isSUcessfull) {
+                                //goto payment gateway with the web link
+                                setState(() {
+                                  _isLoadingGateWay = false;
+                                });
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PaymentGateWay(
+                                          paymentLink: response.item2,
+                                          orderedItem: orderedItem,
+                                        )));
+                              } else {
+                                Constants.showErrorDialog(
+                                    response.item1.responseMessage, context);
+                              }
                             }
                           } else {
-                            Constants.showErrorDialog(
-                                response.responseModel.responseMessage,
-                                context);
+                            response = await Provider.of<PaymentProvider>(
+                                    context,
+                                    listen: false)
+                                .initiatePayment(
+                                    amount: widget.amount,
+                                    context: context,
+                                    narration: widget.description,
+                                    orderRef: orderedItem.oderNo,
+                                    txRef: orderedItem.referenceNo);
+                            if (response.item1.isSUcessfull) {
+                              // Constants.showSuccessDialogue(
+                              //     response.item1.responseMessage, context);
+                              setState(() {
+                                _isLoadingGateWay = false;
+                              });
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => PaymentGateWay(
+                                        paymentLink: response.item2,
+                                        orderedItem: orderedItem,
+                                      )));
+                            } else {
+                              Constants.showErrorDialog(
+                                  response.item1.responseMessage, context);
+                            }
                           }
-                        }
-                      } else {
-                        orderedItem = new OrderItem(
-                            id: Uuid().v4(),
-                            name: loggedInUser.lastName != ""
-                                ? loggedInUser.firstName +
-                                    " " +
-                                    loggedInUser.lastName
-                                : loggedInUser.firstName,
-                            phoneNumber: loggedInUser.phoneNumber,
-                            email: loggedInUser.email != null
-                                ? loggedInUser.email
-                                : "",
-                            referenceNo:
-                                "Butterfish & Bread-new Order-${DateTime.now().toString()}",
-                            oderNo: Uuid().v1().substring(0, 5),
-                            narration: widget.description,
-                            totalAmount: widget.amount.toString() + " Ksh",
-                            paymentMethod: "Online",
-                            amount: widget.amount.toString() + " Ksh",
-                            dateTime: DateTime.now(),
-                            deliveryAddress: widget.deliveryAddress,
-                            products: widget.cartItems,
-                            status: Constants.pendingStatus,
-                            userId: loggedInUser.userId);
-                        response = await Provider.of<PaymentProvider>(context,
-                                listen: false)
-                            .startPayment(
-                                amount: widget.amount,
-                                context: context,
-                                narration: widget.description,
-                                orderRef: orderedItem.oderNo,
-                                txRef: orderedItem.referenceNo);
-                        if (response.responseModel.isSUcessfull) {
-                          Constants.showSuccessDialogue(
-                              response.responseModel.responseMessage, context);
-                          if (response.raveStatus == RaveStatus.success) {
-                            //add item to order list and send mail
-                            _processCompletePaymentProcess(orderedItem);
-                          }
-                        } else {
-                          Constants.showErrorDialog(
-                              response.responseModel.responseMessage, context);
-                        }
-                      }
-                    },
-                    iconData: Icons.payment),
+                        },
+                        iconData: Icons.payment),
                 _buildPaymentWidget(
                     title: "PAY WITH COUPON",
                     color: Constants.primaryColor,

@@ -5,6 +5,7 @@ import 'package:provider_pattern/helpers/constants.dart';
 import 'package:provider_pattern/helpers/custom_route.dart';
 import 'package:provider_pattern/pages/auth/auth_screen.dart';
 import 'package:provider_pattern/pages/home/homePage.dart';
+import 'package:provider_pattern/pages/offers/offers_screen.dart';
 import 'package:provider_pattern/pages/orders/orderPage.dart';
 import 'package:provider_pattern/pages/payment/walletSCreen.dart';
 import 'package:provider_pattern/pages/user/profilePage.dart';
@@ -55,18 +56,18 @@ class AppDrawer extends StatelessWidget {
                         .pushReplacementNamed(HomePage.routeName);
                   },
                 ),
-                // Divider(),
-                // ListTile(
-                //   leading: Icon(
-                //     FontAwesomeIcons.smile,
-                //     color: Colors.orange,
-                //   ),
-                //   title: Text("Offers"),
-                //   onTap: () {
-                //     Navigator.of(context)
-                //         .pushReplacementNamed(OffersScreen.routename);
-                //   },
-                // ),
+                Divider(),
+                ListTile(
+                  leading: Icon(
+                    FontAwesomeIcons.smile,
+                    color: Colors.orange,
+                  ),
+                  title: Text("Offers"),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(OffersScreen.routename);
+                  },
+                ),
                 Divider(),
                 ListTile(
                     leading: Icon(
