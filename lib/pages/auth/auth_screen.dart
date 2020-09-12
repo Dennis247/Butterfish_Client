@@ -88,7 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
         country: _country,
         countryCode: _countryDialCOde,
         countryAbbv: _countryAbbv,
-        units: 0.0,
+        units: 10.0,
         usedCoupons: "",
         password: _passwordController.text.trim());
     if (_authMode == AuthMode.Login) {

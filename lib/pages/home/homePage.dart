@@ -1,9 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider_pattern/helpers/constants.dart';
 import 'package:provider_pattern/models/category.dart';
-import 'package:provider_pattern/models/orders.dart';
 import 'package:provider_pattern/models/product.dart';
 import 'package:provider_pattern/pages/cart/cartPage.dart';
 import 'package:provider_pattern/pages/category/categoryPage.dart';

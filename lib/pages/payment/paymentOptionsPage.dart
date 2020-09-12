@@ -13,7 +13,7 @@ import 'package:provider_pattern/provider/authProvider.dart';
 import 'package:provider_pattern/provider/cartProvider.dart';
 import 'package:provider_pattern/provider/orderProvider.dart';
 import 'package:provider_pattern/provider/paymentProvider.dart';
-import 'package:rave_flutter/rave_flutter.dart';
+//import 'package:rave_flutter/rave_flutter.dart';
 import 'package:toast/toast.dart';
 import 'package:provider_pattern/provider/NotificationProvider.dart';
 import 'package:tuple/tuple.dart';

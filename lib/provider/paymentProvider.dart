@@ -4,17 +4,17 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider_pattern/helpers/constants.dart';
 import 'package:provider_pattern/models/response.dart';
-import 'package:rave_flutter/rave_flutter.dart';
+//import 'package:rave_flutter/rave_flutter.dart';
 import 'package:tuple/tuple.dart';
 import 'authProvider.dart';
 
-class PaymentResponseModel {
-  final ResponseModel responseModel;
-  final RaveStatus raveStatus;
+// class PaymentResponseModel {
+//   final ResponseModel responseModel;
+//   //final RaveStatus raveStatus;
 
-  PaymentResponseModel(
-      {@required this.responseModel, @required this.raveStatus});
-}
+//   PaymentResponseModel(
+//       {@required this.responseModel, @required this.raveStatus});
+// }
 
 class PaymentProvider with ChangeNotifier {
   Dio dio = new Dio();
