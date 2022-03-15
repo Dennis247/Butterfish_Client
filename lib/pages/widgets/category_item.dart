@@ -43,11 +43,11 @@ class CategoryItem extends StatelessWidget {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       // Add one stop for each color. Stops should increase from 0 to 1
-                      stops: [0.2, 0.7],
-                      colors: [
-                        Constants.categoryColor,
-                        Constants.categoryColor,
-                      ],
+                      // stops: [0.2, 0.7],
+                      // colors: [
+                      //   Constants.categoryColor,
+                      //   Constants.categoryColor,
+                      // ],
                       // stops: [0.0, 0.1],
                     ),
                   ),
